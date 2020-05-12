@@ -9,7 +9,9 @@ require("dotenv").config({
 // Configure database
 const DB_URI = process.env.DB_URI;
 const DB_PORT = process.env.DB_PORT;
-const DB_NAME = process.env.DB_NAME;
+const DB_NAME_TEST = process.env.DB_NAME_TEST;
+const NODE_ENV = process.env.NODE_ENV;
+const DB_NAME = NODE_ENV === "test" ? DB_NAME_TEST : process.env.DB_NAME;
 const URI_MONGO = `mongodb://${DB_URI}:${DB_PORT}/${DB_NAME}`;
 const mongoose = require("mongoose");
 
@@ -29,7 +31,7 @@ app.use("/items", require("./routes/items"));
 // Start Server
 const port = process.env.PORT;
 
-if (process.env.NODE_ENV !== 'test') {
+if (NODE_ENV !== "test") {
   app.listen(port, () => {
     console.log(`Listening on port ${port}`);
   });
