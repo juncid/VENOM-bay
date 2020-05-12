@@ -15,14 +15,24 @@ const mongoose = require("mongoose");
 
 mongoose.connect(URI_MONGO, {
   useNewUrlParser: true,
-  useCreateIndex: true
+  useCreateIndex: true,
+  useUnifiedTopology: true
 });
+
+// Configure body-parser middleware
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
 
 // Configure routes
 app.use("/items", require("./routes/items"));
 
 // Start Server
 const port = process.env.PORT;
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
-});
+
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(port, () => {
+    console.log(`Listening on port ${port}`);
+  });
+}
+
+module.exports = app;
