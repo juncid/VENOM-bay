@@ -4,6 +4,7 @@ const request = require("supertest");
 const User = require("../../../server/models/user");
 const { seedUsers, populateUsers } = require("./seed");
 const { ObjectId } = require("mongodb");
+const faker = require("faker");
 
 beforeEach(populateUsers);
 
@@ -20,5 +21,23 @@ describe("GET /users", () => {
       .get("/users")
       .expect(401);
     expect(res.body.user).toBeUndefined();
+  });
+});
+
+describe("POST /users", () => {
+  it("should create a user", async () => {
+    const user = {
+      name: faker.name.firstName(),
+      email: faker.internet.email(),
+      password: faker.internet.password()
+    };
+    const res = await request(app)
+      .post("/users")
+      .send(user)
+      .expect(200);
+    expect(res.header.authorization).toBeDefined();
+    expect(res.body.user.email).toBe(user.email);
+    const doc = await User.findOne({email: user.email});
+    expect(doc).toBeTruthy();
   });
 });

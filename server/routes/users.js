@@ -5,8 +5,8 @@ const authenticate = require("../middleware/auth");
 
 router
   .route("/")
-  .all(authenticate)
   .post(UsersController.create)
+  .all(authenticate)
   .get(UsersController.read);
 
 module.exports = router;
