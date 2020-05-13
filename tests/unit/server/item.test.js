@@ -2,20 +2,9 @@ const expect = require("expect");
 const app = require("../../../server");
 const request = require("supertest");
 const Item = require("../../../server/models/item");
+const {seedItems, populateItems} = require("./seed");
 
-const seedItems = [
-  {
-    title: "Test item 1"
-  },
-  {
-    title: "Test item 2"
-  }
-];
-
-beforeEach(async () => {
-  await Item.deleteMany();
-  await Item.insertMany(seedItems);
-});
+beforeEach(populateItems);
 
 describe("POST /items", () => {
   it("should create a new item", async () => {
