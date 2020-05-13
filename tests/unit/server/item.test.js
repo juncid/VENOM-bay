@@ -38,7 +38,7 @@ describe("GET /items", () => {
   });
 });
 
-describe("GET /items/;id", () => {
+describe("GET /items/:id", () => {
   it("should return item doc", async () => {
     const res = await request(app)
       .get(`/items/${seedItems[0]._id.toHexString()}`)
