@@ -1,7 +1,8 @@
 const Users = require("../models/user");
 
 exports.create = async (req, res) => {
-  const user = new Users(req.body);
+  const { name, email, password } = req.body;
+  const user = new Users({ name, email, password });
 
   try {
     const doc = await user.save();
@@ -12,4 +13,19 @@ exports.create = async (req, res) => {
   } catch (e) {
     res.status(400).send(e);
   }
-}
+};
+
+exports.read = async (req, res) => {
+  let token;
+  try {
+    token = req.header("authorization").split(" ")[1];
+  } catch (e) {
+    return res.status(401).send({message: "Authorization token invalid."});
+  }
+  try {
+    const user = await Users.findByToken(token);
+    res.send({user});
+  } catch (e) {
+    res.status(401).send(e);
+  }
+};

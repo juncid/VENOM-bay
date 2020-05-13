@@ -28,6 +28,11 @@ const UserSchema = mongoose.Schema({
   token: {
     type: String
   }
+},
+  {
+  toJSON: {
+    transform: (doc, {_id, name, email}) => ({_id, name, email})
+  }
 });
 
 UserSchema.methods.generateAuthToken = async function () {
@@ -38,6 +43,15 @@ UserSchema.methods.generateAuthToken = async function () {
   this.token = token;
   await this.save();
   return token;
+}
+
+UserSchema.statics.findByToken = async function (token) {
+  try {
+    const {_id} = jwt.verify(token, process.env.JWT_SECRET);
+    return this.findOne({_id, token});
+  } catch (e) {
+    throw e;
+  }
 }
 
 module.exports = mongoose.model("User", UserSchema);
