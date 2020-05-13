@@ -33,7 +33,7 @@ const UserSchema = mongoose.Schema({
 UserSchema.methods.generateAuthToken = async function () {
   const token = jwt.sign(
     { _id: this._id.toHexString() },
-    "secret value"
+    process.env.JWT_SECRET
   ).toString();
   this.token = token;
   await this.save();
