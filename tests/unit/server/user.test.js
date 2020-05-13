@@ -40,4 +40,20 @@ describe("POST /users", () => {
     const doc = await User.findOne({email: user.email});
     expect(doc).toBeTruthy();
   });
+  it("should not create an user with invalid date", async () => {
+    await request(app)
+      .post("/users")
+      .send({})
+      .expect(400);
+    const users = await User.find();
+    expect(users.length).toBe(2);
+  });
+  it("should not create a new user with duplicated email", async () => {
+    await request(app)
+      .post("/users")
+      .send(seedUsers[0])
+      .expect(400);
+    const users = await User.find();
+    expect(users.length).toBe(2);
+  });
 });
