@@ -16,16 +16,5 @@ exports.create = async (req, res) => {
 };
 
 exports.read = async (req, res) => {
-  let token;
-  try {
-    token = req.header("authorization").split(" ")[1];
-  } catch (e) {
-    return res.status(401).send({message: "Authorization token invalid."});
-  }
-  try {
-    const user = await Users.findByToken(token);
-    res.send({user});
-  } catch (e) {
-    res.status(401).send(e);
-  }
+  res.send({user: req.user});
 };
