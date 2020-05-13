@@ -29,6 +29,7 @@ app.use(bodyParser.json());
 
 // Configure routes
 app.use("/items", require("./routes/items"));
+app.use("/users", require("./routes/users"));
 
 // Start Server
 const port = process.env.PORT;
