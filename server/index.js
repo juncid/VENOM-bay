@@ -19,7 +19,9 @@ mongoose.connect(URI_MONGO, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true
-});
+})
+  .then(db => console.log("DB is connected"))
+  .catch(err => console.error(err));
 
 // Configure body-parser middleware
 const bodyParser = require("body-parser");

@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - "10.15.3"
+services: mongodb
+cache: npm
+install:
+  - npm ci
+before_script:
+  - sleep 15
+script:
+  - npm run test:unit:server
