@@ -14,10 +14,9 @@ const { MONGO_DB_URI,
 
 // Configure database
 const DB_NAME = NODE_ENV === "test" ? MONGO_DB_NAME_TEST : MONGO_DB_NAME;
-const URI_MONGO = `${MONGO_DB_URI}/${DB_NAME}`;
 const mongoose = require("mongoose");
 
-mongoose.connect(URI_MONGO, {
+mongoose.connect(`${MONGO_DB_URI}/${DB_NAME}`, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true

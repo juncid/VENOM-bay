@@ -23,6 +23,6 @@ const users = [
 
 exports.users = async () => {
   await User.deleteMany();
-  await new User(users[0].save());
-  await new User(users[1].save());
+  await new User(users[0]).save();
+  await new User(users[1]).save();
 };
