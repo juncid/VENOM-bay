@@ -18,3 +18,16 @@ exports.create = async (req, res) => {
 exports.read = async (req, res) => {
   res.send({user: req.user});
 };
+
+exports.login = async (req, res) => {
+  const {email, password} = req.body;
+  try {
+    const user = await Users.findByCredentials(email, password);
+    const token = await user.generateAuthToken();
+    res
+      .header("authorization", `Bearer ${token}`)
+      .send({user});
+  } catch (e) {
+    res.status(400).send(e);
+  }
+}

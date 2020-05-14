@@ -28,15 +28,23 @@ const UserSchema = mongoose.Schema({
   },
   token: {
     type: String
+  },
+  role: {
+    type: String,
+    enum: ["admin", "user"],
+    default: "user"
   }
 },
-  {
+{
   toJSON: {
-    transform: (doc, {_id, name, email}) => ({_id, name, email})
+    transform: (doc, {_id, name, email, role}) => ({_id, name, email, role})
   }
 });
 
 UserSchema.methods.generateAuthToken = async function () {
+  if (this.token) {
+    return this.token;
+  }
   const token = jwt.sign(
     { _id: this._id.toHexString() },
     process.env.JWT_SECRET
@@ -62,6 +70,44 @@ UserSchema.pre("save", async function (next) {
       next();
     } catch (e) {
       next(e);
+    }
+  } else {
+    next();
+  }
+});
+
+UserSchema.statics.findByCredentials = async function (email, password) {
+  const user = await this.findOne({email});
+  if (!user) {
+    throw {
+      errors: {
+        email: {
+          message: "User not found."
+        }
+      }
+    };
+  } else {
+    if (await bcrypt.compare(password, user.password)) {
+      return user;
+    } else {
+      throw {
+        errors: {
+          email:{
+            message: "Incorrect password."
+          }
+        }
+      };
+    }
+  }
+};
+
+UserSchema.pre("save", async function (next) {
+  if (this.isModified("role") && this.role === "admin") {
+    const users = await this.constructor.find({role: "admin"});
+    if (users.length >= 1) {
+      next(new Error("Only one admin user can be added."));
+    } else {
+      next();
     }
   } else {
     next();
