@@ -9,6 +9,6 @@ router
 
 router
   .route("/:id")
-  .get(ItemController.read)
+  .get(ItemController.read);
 
 module.exports = router;

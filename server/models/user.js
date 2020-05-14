@@ -2,6 +2,12 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const path = require("path");
+require("dotenv").config({
+  path: path.join(__dirname, "..", ".env.server")
+});
+
+const { JWT_SECRET } = process.env;
 
 const UserSchema = mongoose.Schema({
   name: {
@@ -47,7 +53,7 @@ UserSchema.methods.generateAuthToken = async function () {
   }
   const token = jwt.sign(
     { _id: this._id.toHexString() },
-    process.env.JWT_SECRET
+    JWT_SECRET
   ).toString();
   this.token = token;
   await this.save();
@@ -56,7 +62,7 @@ UserSchema.methods.generateAuthToken = async function () {
 
 UserSchema.statics.findByToken = async function (token) {
   try {
-    const {_id} = jwt.verify(token, process.env.JWT_SECRET);
+    const {_id} = jwt.verify(token, JWT_SECRET);
     return this.findOne({_id, token});
   } catch (e) {
     throw e;

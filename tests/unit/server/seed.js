@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config({
   path: "../../../../.env.server"
 });
+const {JWT_SECRET} = process.env;
 
 const seedItems = [
   {
@@ -27,7 +28,7 @@ const seedUsers = [
     name: faker.name.firstName(),
     email: faker.internet.email(),
     password: faker.internet.password(),
-    token: jwt.sign({_id: userOneId}, process.env.JWT_SECRET.toString())
+    token: jwt.sign({_id: userOneId}, JWT_SECRET.toString())
   },
   {
     _id: userTwoId,
